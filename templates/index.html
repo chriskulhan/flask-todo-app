@@ -1,109 +1,102 @@
-# will hold the html template that Jinga2 will use
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book Reading Tracker</title>
+    <title>My Todo List 📝</title>
+    <style>
+        .todo-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            font-family: Arial, sans-serif;
+        }
+        
+        h1 {
+            color: #2d3748;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        
+        .todo-form {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        #todo-input {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #e2e8f0;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        .todo-form button {
+            background-color: #4299e1;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .todo-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 10px;
+            background-color: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 5px;
+        }
+        
+        .todo-item.done {
+            background-color: #f8fafc;
+            text-decoration: line-through;
+            color: #718096;
+        }
+        
+        .todo-item span {
+            flex: 1;
+        }
+        
+        .todo-item small {
+            color: #718096;
+            margin: 0 10px;
+        }
+        
+        .todo-item a {
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        
+        .todo-item a[aria-label="Delete todo"] {
+            color: #e53e3e;
+        }
+    </style>
 </head>
-<body style="font-family: system-ui, sans-serif; line-height: 1.6; max-width: 800px; margin: 40px auto; padding: 20px; background-color: #f5f5f5;">
-    <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-        <h1 style="color: #2d3748; margin-bottom: 24px; text-align: center;">📚 My Reading List</h1>
-
-        <form action="{{ url_for('add') }}" method="post" style="margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
-            <div style="flex: 2 1 200px;">
-                <input 
-                    type="text" 
-                    name="title" 
-                    placeholder="Book title..." 
-                    required 
-                    style="width: 100%; padding: 10px; border: 2px solid #e2e8f0; border-radius: 5px; font-size: 16px;">
-            </div>
-            <div style="flex: 1 1 150px;">
-                <input
-                    type="text"
-                    name="author"
-                    placeholder="Author..."
-                    required
-                    style="width: 100%; padding: 10px; border: 2px solid #e2e8f0; border-radius: 5px; font-size: 16px;">
-            </div>
-            <div style="flex: 0 1 100px;">
-                <input
-                    type="number"
-                    name="pages"
-                    placeholder="Pages..."
-                    style="width: 100%; padding: 10px; border: 2px solid #e2e8f0; border-radius: 5px; font-size: 16px;">
-            </div>
-            <button
-                type="submit"
-                style="background-color: #4299e1; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 16px;">
-                Add Book
-            </button>
+<body>
+    <div class="todo-container">
+        <h1>My Todo List 📝</h1>
+        <form action="{{ url_for('add') }}" method="post" class="todo-form">
+            <input type="text" id="todo-input" name="title" placeholder="Add a new todo..." required aria-label="New todo item">
+            <button type="submit">Add Todo</button>
         </form>
-
-        <div class="books-list">
-            {% for book in books %}
-            <div style="display: flex; flex-wrap: wrap; align-items: center; padding: 15px; margin-bottom: 10px; 
-                      background-color: {% if book.completed %}#f8fafc{% else %}white{% endif %}; 
-                      border: 1px solid #e2e8f0; border-radius: 5px;">
-                <div style="flex: 1 1 200px;">
-                    <h3 style="margin: 0; {% if book.completed %}text-decoration: line-through; color: #718096;{% endif %}">
-                        {{ book.title }}
-                    </h3>
-                    <p style="margin: 5px 0; color: #718096;">
-                        by {{ book.author }}
-                        {% if book.pages %} • {{ book.pages }} pages{% endif %}
-                    </p>
-                </div>
-
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <div class="rating" style="display: flex; gap: 2px;">
-                        {% for i in range(1, 6) %}
-                        <a href="{{ url_for('rate', book_id=book.id, rating=i) }}" 
-                           style="text-decoration: none; font-size: 20px;">
-                            {% if book.rating >= i %}⭐{% else %}☆{% endif %}
-                        </a>
-                        {% endfor %}
-                    </div>
-
-                    <a href="{{ url_for('toggle', book_id=book.id) }}" 
-                       style="text-decoration: none; margin: 0 10px;">
-                        {% if book.completed %}🔄{% else %}✅{% endif %}
-                    </a>
-
-                    <a href="{{ url_for('delete', book_id=book.id) }}" 
-                       style="text-decoration: none; color: #e53e3e;">
-                        🗑️
-                    </a>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-    <body>
-        <div class="todo-container">
-            <h1>My Todo List 📝</h1>
-            <form action="{{url_for('add') }}" method="post" class="todo-form">
-                <input type="text" id="todo-input" name="title" placeholder="Add a new todo...">
-                <button type="submit">Add Todo</button>
-            </form>
+        <div role="list" aria-label="Todo items">
+            {% for todo in todos %}
             <div role="listitem" class="todo-item {% if todo.done %}done{% endif %}">
                 <span>{{ todo.title }}</span>
-                <small>{{ todo.create_at.strftime('%Y-%m-%d %H:%M:%S') }}</small>
+                <small>{{ todo.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</small>
                 <a href="{{ url_for('toggle', todo_id=todo.id) }}" aria-label="{% if todo.done %}Mark as undone{% else %}Mark as done{% endif %}">
                     {% if todo.done %}🔄{% else %}✅{% endif %}
                 </a>
                 <a href="{{ url_for('delete', todo_id=todo.id) }}" aria-label="Delete todo">🗑️</a>
             </div>
             {% endfor %}
-            </div>
         </div>
-    </body>
-    </html>
-
-
+    </div>
 </body>
 </html>
-
-
