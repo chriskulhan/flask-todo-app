@@ -1,0 +1,16 @@
+# explanation for terminal codes: (from Dr. Mary Lebens capstone class)
+
+# python -m venv venv: 
+# This command creates a virtual environment named venv using Python's built-in venv module. 
+# A virtual environment is an isolated environment that allows you to install packages without affecting the global Python installation. 
+# It helps to manage dependencies for your project. While not strictly necessary when running your application in VS Code in Codespaces 
+# (since you are already within an isolated environment), this is a good practice in case you share your project with someone who doesn't use Codespaces.
+
+# source venv/bin/activate: 
+# This command activates the virtual environment you created. When the virtual environment is activated, 
+# your shell's prompt changes, and any Python packages installed will be specific to this environment. 
+
+# pip install flask flask-sqlalchemy: 
+# This command installs the Flask and Flask-SQLAlchemy packages into your virtual environment. 
+# Flask is a micro web framework for Python, and Flask-SQLAlchemy is an extension for Flask that adds support for SQLAlchemy, 
+# a SQL toolkit and Object-Relational Mapping (ORM) library.
